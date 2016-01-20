@@ -1,0 +1,130 @@
+<!-- 
+  Turtlebot navigation simulation:
+  - stage
+  - map_server
+  - move_base
+  - static map
+  - amcl
+  - rviz view
+ -->
+
+<launch>
+<!-- Transform for Velodyne to map TODO fix this-->
+    <node pkg="tf" type="static_transform_publisher" name="map_to_velodyne"
+    args="0 0 0.475 0 0 0 map velodyne 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_baselink"
+    args="0 0 0 0 0 0 base_footprint base_link 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_base_footprint"
+    args="0 0 0 0 0 0 odom base_footprint 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+    args="0 0 0 0 0 0 map odom 100" />
+
+  <arg name="base"       default="$(optenv TURTLEBOT_BASE kobuki)"/>  <!-- create, rhoomba -->
+  <arg name="stacks"     default="$(optenv TURTLEBOT_STACKS hexagons)"/>  <!-- circles, hexagons -->
+  <arg name="3d_sensor"  default="$(optenv TURTLEBOT_3D_SENSOR kinect)"/>  <!-- kinect, asus_xtion_pro -->
+
+  <!-- Name of the map to use (without path nor extension) and initial position -->
+  <!-- <arg name="map_file"       default=" $(env TURTLEBOT_STAGE_MAP_FILE)"/>  robopark_plan -->
+  <arg name="map_file"       default=" $(find pioneerauto)/maps/maze.yaml"/> <!-- robopark_plan
+  <arg name="world_file"     default=" $(env TURTLEBOT_STAGE_WORLD_FILE)"/> -->
+  <arg name="world_file"     default=" $(find pioneerauto)/maps/maze.yaml"/>
+  <arg name="initial_pose_x" default="4.0"/>
+  <arg name="initial_pose_y" default="4.0"/>
+  <arg name="initial_pose_a" default="0.0"/>
+
+<!--  <param name="/use_sim_time" value="true"/>
+    ******************** Stage ********************  -->
+  <!-- l
+        Publishes transforms:
+          /base_link -> /base_laser
+          /base_footprint -> /base_link (identity)
+          /odom -> base_footprint
+        Publishes topics:
+          /odom : odometry data from the simulated odometry
+          /base_scan : laser data from the simulated laser
+          /base_pose_ground_truth : the ground truth pose
+        Parameters:
+          base_watchdog_timeout : time (s) after receiving the last command on cmd_vel before stopping the robot
+        Args:
+          -g : run in headless mode.
+  
+  <node pkg="stage_ros" type="stageros" name="stageros" args="$(arg world_file)">
+    <param name="base_watchdog_timeout" value="0.5"/>
+    <remap from="odom" to="odom"/>
+    <remap from="base_pose_ground_truth" to="base_pose_ground_truth"/>
+    <remap from="cmd_vel" to="mobile_base/commands/velocity"/>
+    <remap from="base_scan" to="scan"/>
+  </node>
+--> 
+
+  <!--  ***************** Robot Model *****************  
+  <include file="$(find turtlebot_bringup)/launch/includes/robot.launch.xml">
+    <arg name="base" value="$(arg base)" />
+    <arg name="stacks" value="$(arg stacks)" />
+    <arg name="3d_sensor" value="$(arg 3d_sensor)" />
+  </include>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+    <param name="use_gui" value="true"/>
+  </node>
+-->
+ <!-- ======================= Integrate Pioneer Robot ============================================ -->
+
+  <!-- Start the 3d LRF -->
+  <include file="$(find velodyne_pointcloud)/launch/DML_VLP16_points.launch">
+  </include>
+
+  <!-- Start the imu roslaunch phidgets_imu imu.launch -->
+  <include file="$(find phidgets_imu)/launch/imu.launch">
+  </include> 
+
+  <!-- Start the imu roslaunch phidgets_imu imu.launch -->
+  <include file="$(find pioneerauto)/launch/pioneer_ekf.launch">
+  </include> 
+
+  <!-- Load the URDF into the ROS Parameter Server -->
+  <include file="$(find p2os_urdf)/launch/upload_pioneer3at.xml"/>
+  
+  <!-- publish TFs for static links -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0"/>
+    <param name="tf_prefix" type="string" value=""/> 
+  </node>
+
+   <node pkg="rosaria" type="RosAria" name="RosAria">
+    <param name="port" value="/dev/ttyUSB0"/>
+    <remap from="/RosAria/cmd_vel" to="mobile_base/commands/velocity"/>
+    <remap from="/tf" to="/rosariatf"/>
+  </node>
+
+  <!-- Command Velocity multiplexer -->
+  <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+  <node pkg="nodelet" type="nodelet" name="cmd_vel_mux" args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+    <param name="yaml_cfg_file" value="$(find pioneerauto)/param/mux.yaml"/>
+    <remap from="cmd_vel_mux/output" to="mobile_base/commands/velocity"/>
+  </node>
+
+  <!--  ************** Navigation  ***************  -->
+<!-- TODO update this below. Need to use a real map of here. Need to use the robot sensors. -->
+  <include file="$(find pioneerauto)/launch/includes/move_base.launch.xml"/>
+
+  <!--  ****** Maps *****  -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+    <param name="frame_id" value="/map"/>
+  </node>
+
+  <include file="$(find turtlebot_navigation)/launch/includes/amcl.launch.xml">
+    <arg name="scan_topic" value="velodyne_ponits"/>
+    <arg name="use_map_topic" value="true"/>
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+
+  <!--  **************** Visualisation ****************  -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find turtlebot_stage)/rviz/robot_navigation.rviz"/>
+
+</launch>
+

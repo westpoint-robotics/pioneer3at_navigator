@@ -1,0 +1,14 @@
+<!-- Phidgets IMU launch file rosrun phidgets_imu phidgets_imu_node-->
+
+<launch>
+
+    <node pkg="phidgets_imu" type="phidgets_imu_node" name="phidgets_imu">
+        <remap from="/imu/data_raw" to="/imu/data_raw"/>  -->
+
+ <!--	<node pkg="receive_xsens" type="receive_xsens" name="receive_xsens" output="screen" />
+        <remap from="/imu/data" to="/imu/data_raw"/> -->
+
+    </node>
+
+
+</launch>
