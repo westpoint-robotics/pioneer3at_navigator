@@ -16,7 +16,7 @@
     <remap from="/tf" to="/rosariatf"/>
   </node>
 
-  <include file="$(find pioneerauto)/launch/xbox360_teleop.launch"/>
+  <include file="$(find pioneer3at_navigator)/launch/xbox360_teleop.launch"/>
 
 </launch>
 

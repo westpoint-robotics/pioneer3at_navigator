@@ -28,9 +28,9 @@
 
   <!-- Name of the map to use (without path nor extension) and initial position -->
   <!-- <arg name="map_file"       default=" $(env TURTLEBOT_STAGE_MAP_FILE)"/>  robopark_plan -->
-  <arg name="map_file"       default=" $(find pioneerauto)/maps/maze.yaml"/> <!-- robopark_plan
+  <arg name="map_file"       default=" $(find pioneer3at_navigator)/maps/maze.yaml"/> <!-- robopark_plan
   <arg name="world_file"     default=" $(env TURTLEBOT_STAGE_WORLD_FILE)"/> -->
-  <arg name="world_file"     default=" $(find pioneerauto)/maps/maze.yaml"/>
+  <arg name="world_file"     default=" $(find pioneer3at_navigator)/maps/maze.yaml"/>
   <arg name="initial_pose_x" default="4.0"/>
   <arg name="initial_pose_y" default="4.0"/>
   <arg name="initial_pose_a" default="0.0"/>
@@ -81,7 +81,7 @@
   </include> 
 
   <!-- Start the imu roslaunch phidgets_imu imu.launch -->
-  <include file="$(find pioneerauto)/launch/pioneer_ekf.launch">
+  <include file="$(find pioneer3at_navigator)/launch/pioneer_ekf.launch">
   </include> 
 
   <!-- Load the URDF into the ROS Parameter Server -->
@@ -102,13 +102,13 @@
   <!-- Command Velocity multiplexer -->
   <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
   <node pkg="nodelet" type="nodelet" name="cmd_vel_mux" args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
-    <param name="yaml_cfg_file" value="$(find pioneerauto)/param/mux.yaml"/>
+    <param name="yaml_cfg_file" value="$(find pioneer3at_navigator)/param/mux.yaml"/>
     <remap from="cmd_vel_mux/output" to="mobile_base/commands/velocity"/>
   </node>
 
   <!--  ************** Navigation  ***************  -->
 <!-- TODO update this below. Need to use a real map of here. Need to use the robot sensors. -->
-  <include file="$(find pioneerauto)/launch/includes/move_base.launch.xml"/>
+  <include file="$(find pioneer3at_navigator)/launch/includes/move_base.launch.xml"/>
 
   <!--  ****** Maps *****  -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">

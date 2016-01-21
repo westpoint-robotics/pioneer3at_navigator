@@ -2,7 +2,7 @@
     ROS navigation stack with velocity smoother and safety (reactive) controller
 -->
 <launch>
-  <include file="$(find pioneerauto)/launch/includes/velocity_smoother.launch.xml"/> <!-- OK -->
+  <include file="$(find pioneer3at_navigator)/launch/includes/velocity_smoother.launch.xml"/> <!-- OK -->
   <!-- TODO write a Pioneer safety controller that stops the robot on collision or cliff detection
   <include file="$(find turtlebot_navigation)/launch/includes/safety_controller.launch.xml"/> -->
   
