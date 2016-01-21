@@ -38,11 +38,11 @@
 
     <include file="$(find aribo)/launch/xbox360_teleop.launch"/>
 
-   <!-- ========== Start the IMU   ==========  -->
+   <!-- ========== Start the IMU   ========== -->
     <node pkg="phidgets_imu" type="phidgets_imu_node" name="phidgets_imu">
         <remap from="/imu/data_raw" to="/imu/data_raw"/>
     </node> 
-	<!--<node pkg="receive_xsens" type="receive_xsens" name="receive_xsens" output="screen" respawn="true">
+ 	<!--<node pkg="receive_xsens" type="receive_xsens" name="receive_xsens" output="screen" respawn="true">
             <remap from="/imu/data" to="/imu/data_raw"/> 
         </node>-->
 
@@ -63,9 +63,9 @@
 
      <include file="$(find aribo)/launch/includes/amcl.launch.xml">
   </include>
+ <!-- Start an rviz node with a custom configuration  -->
 
-<!-- Start an rviz node with a custom configuration  -->
-<node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find aribo)/launch/aribo.rviz"/>
+
 
 </launch>
 <!--

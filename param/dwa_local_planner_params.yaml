@@ -52,4 +52,4 @@ DWAPlannerROS:
   global_frame_id: map
 
 # Differential-drive robot configuration - necessary?
-#  holonomic_robot: false
+  holonomic_robot: true
