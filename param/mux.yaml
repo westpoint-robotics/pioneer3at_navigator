@@ -15,7 +15,7 @@ subscribers:
     timeout:     0.2
     priority:    10
   - name:        "Teleoperation"
-    topic:       "input/teleop"
+    topic:       "/teleop_joystick/cmd_vel"
     timeout:     1.0
     priority:    7
   - name:        "Navigation"
