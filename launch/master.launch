@@ -1,0 +1,11 @@
+<launch>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+  <node pkg="mjpeg_server" type="mjpeg_server" name="mjpeg_server" />
+
+  <node pkg="aribo" type="velocityControl.py" name="velocityControl" output="screen">
+    <remap from="/VC/teleop" to="/teleop" />
+    <remap from="/VC/out" to="/cmd_vel" />
+  </node>
+
+</launch>
