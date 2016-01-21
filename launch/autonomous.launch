@@ -4,6 +4,9 @@
     <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
     args="0 0 0 0 0 0 map odom 100" />  -->
 
+<node pkg="tf" type="static_transform_publisher" name="world_to_odom"
+   args= "0 0 0 0 0 0 odom world 100" />  
+
 <node pkg="tf" type="static_transform_publisher" name="baselink_to_velodyne"
    args=" 0.18 0 0.475 -1.57 0 0 base_link velodyne 100" />
 
@@ -25,7 +28,8 @@
 
    <node pkg="rosaria" type="RosAria" name="RosAria">
     <param name="port" value="/dev/ttyUSB0"/>
-    <remap from="/tf" to="/rosariatf"/>
+    <remap from="/tf" to="/rosariatf"/>  
+    <remap from="/RosAria/pose" to="odom"/>
   </node>
 
    <!-- ========== Joystick  and Command Velocity Mux ========== -->
@@ -42,9 +46,6 @@
     <node pkg="phidgets_imu" type="phidgets_imu_node" name="phidgets_imu">
         <remap from="/imu/data_raw" to="/imu/data_raw"/>
     </node> 
-	<!--<node pkg="receive_xsens" type="receive_xsens" name="receive_xsens" output="screen" respawn="true">
-            <remap from="/imu/data" to="/imu/data_raw"/> 
-        </node>-->
 
    <!-- ========== Start the 3d Laser and Laser Scan ========== 
     <include file="$(find velodyne_pointcloud)/launch/DML_VLP16_points.launch">
@@ -53,9 +54,14 @@
     <include file="$(find pioneer3at_navigator)/launch/velodyne32e.launch">
     </include>
 
-    <!-- Start ekf to make imu into odom -->
+    <!-- Start ekf to make imu into odom 
     <include file="$(find pioneer3at_navigator)/launch/pioneer_ekf.launch">
     </include> 
+-->
+    <include file="$(find pioneer3at_navigator)/launch/laser_odom.launch">
+    </include> 
+
+
 
   <!--  ************** Navigation  ***************  -->
   <include file="$(find pioneer3at_navigator)/launch/includes/move_base.launch.xml"/>

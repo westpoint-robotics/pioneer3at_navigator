@@ -1,0 +1,18 @@
+<!-- Pioneer in USMA   -->
+<launch>
+
+
+ <!--   <node pkg="tf" type="static_transform_publisher" name="base_link_to_velodyne"
+   args=" 0.18 0 0.475 -1.57 0 0 base_link velodyne 100" />
+
+    <include file="$(find pioneer3at_navigator)/launch/velodyne32e.launch">
+    </include>
+-->
+    <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" output="screen" name="laser_scan_matcher">
+        <param name="use_odom" value="true"/>
+        <param name="use_imu" value="true"/>
+  <!--      <remap from="/imu/data" to="/imu/data_raw"/>  -->
+    </node>
+
+</launch>
+
