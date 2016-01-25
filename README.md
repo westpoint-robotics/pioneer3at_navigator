@@ -2,7 +2,7 @@
 Pioneer 3AT Robot Autonomous Navigator
 
 #### 1. Install RosAria to provide an interface to the Pioneer3at robot. 
-(from: http://wiki.ros.org/ROSARIA/Tutorials/How%20to%20use%20ROSARIA)
+    (from: http://wiki.ros.org/ROSARIA/Tutorials/How%20to%20use%20ROSARIA)
     1. cd ~/catkin_ws/src
     2. git clone https://github.com/amor-ros-pkg/rosaria.git
     3. cd ..
@@ -13,7 +13,7 @@ Pioneer 3AT Robot Autonomous Navigator
     8. rospack profile
 
 #### 2. Use UDEV rules to create a device alias for Pioneer3At. 
-(http://www.reactivated.net/writing_udev_rules.html)
+    (http://www.reactivated.net/writing_udev_rules.html)
     1. # find the vendor_id and product_id of the usb to serial adapter
     2. sudo lsusb
     3. # Returned: Bus 002 Device 014: ID 067b:2303 Prolific Technology, Inc. PL2303 Serial Port
