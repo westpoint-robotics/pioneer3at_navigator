@@ -1,7 +1,8 @@
 # pioneer3at_navigator
 Pioneer 3AT Robot Autonomous Navigator
 
-### 1. Install RosAria to provide an interface to the Pioneer3at robot. (from: http://wiki.ros.org/ROSARIA/Tutorials/How%20to%20use%20ROSARIA)
+#### 1. Install RosAria to provide an interface to the Pioneer3at robot. 
+(from: http://wiki.ros.org/ROSARIA/Tutorials/How%20to%20use%20ROSARIA)
     1. cd ~/catkin_ws/src
     2. git clone https://github.com/amor-ros-pkg/rosaria.git
     3. cd ..
@@ -11,7 +12,8 @@ Pioneer 3AT Robot Autonomous Navigator
     7. sudo apt-get install ros-indigo-move-base ros-indigo-turtlebot-teleop ros-indigo-map-server ros-indigo-robot-localization ros-indigo-amcl
     8. rospack profile
 
-### 2. Use UDEV rules to create a device alias for Pioneer3At. (http://www.reactivated.net/writing_udev_rules.html)
+#### 2. Use UDEV rules to create a device alias for Pioneer3At. 
+(http://www.reactivated.net/writing_udev_rules.html)
     1. # find the vendor_id and product_id of the usb to serial adapter
     2. sudo lsusb
     3. # Returned: Bus 002 Device 014: ID 067b:2303 Prolific Technology, Inc. PL2303 Serial Port
@@ -21,30 +23,30 @@ Pioneer 3AT Robot Autonomous Navigator
     7. sudo udevadm control --reload-rules
     8. # unplug usb cable to pioneer3at and replug it in.
     
-### 3. Test the pioneer3at install
+#### 3. Test the pioneer3at install
     1. roslaunch pioneer3at_navigator teleop_only.launch 
     2. # while holding in the left bumper button on xbox controller, move the left joystick to drive the robot.
     
-### 4. Install p2os_urdf. On 25JAN2016 p2os_urdf was unavailable thru apt-get.
+#### 4. Install p2os_urdf. On 25JAN2016 p2os_urdf was unavailable thru apt-get.
     1. # Locate the file: p2os_urdf.tar.gz in the pioneer3at_navigator src directory.
     2. # Extract this file into ~/catkin_ws/src/
     3. cd ~/catkin_ws
     4. catkin_make 
 
-### 5. Install the velodyne laser packages from github.
+#### 5. Install the velodyne laser packages from github.
     1. cd ~/catkin_ws/src
     2. git clone https://github.com/ros-drivers/velodyne.git
     3. cd ~/catkin_make
     4. catkin_make
 
-### 6. Make a network connection for the velodyne VLP16.
+#### 6. Make a network connection for the velodyne VLP16.
     1. sudo chown root:root velodyneVLP16
     2. sudo chmod 600 velodyneVLP16
     3. sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/
     4. sudo service network-manager restart
     5. # In the network-manager gui, connect to velodyneVLP16 
     
-### 7. Install umsa_xsens if using the xsens IMU/GPS. 
+#### 7. Install umsa_xsens if using the xsens IMU/GPS. 
     1. cd ~/catkin_ws/src
     2. git clone https://github.com/westpoint-robotics/usma_xsens.git
     3. sudo apt-get install ros-indigo-gps-common libpcap0.8-dev
@@ -54,7 +56,7 @@ Pioneer 3AT Robot Autonomous Navigator
     7. cd ~/catkin_make
     8. catkin_make
 
-### 8. Test the install of usma_xsens.
+#### 8. Test the install of usma_xsens.
     1. roslaunch xsens_driver xsens_driver.launch 
 
 ## Running the package
