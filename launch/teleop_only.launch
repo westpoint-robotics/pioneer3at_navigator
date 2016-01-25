@@ -11,8 +11,8 @@
 <launch>
 
    <node pkg="rosaria" type="RosAria" name="RosAria">
-    <param name="port" value="/dev/ttyUSB0"/>
-    <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/>
+    <param name="port" value="/dev/pioneer"/>
+    <remap from="/RosAria/cmd_vel" to="/teleop_joystick/cmd_vel"/>
     <remap from="/tf" to="/rosariatf"/>
   </node>
 
