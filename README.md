@@ -40,11 +40,12 @@ Pioneer 3AT Robot Autonomous Navigator
     4. catkin_make
 
 #### 6. Make a network connection for the velodyne VLP16.
-    1. sudo chown root:root velodyneVLP16
-    2. sudo chmod 600 velodyneVLP16
-    3. sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/
-    4. sudo service network-manager restart
-    5. # In the network-manager gui, connect to velodyneVLP16 
+    1. # In the pioneer_navigator root directory the network settings are saved in a file called velodyneVLP16.
+    2. sudo chown root:root velodyneVLP16
+    3. sudo chmod 600 velodyneVLP16
+    4. sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/
+    5. sudo service network-manager restart
+    6. # In the network-manager gui, connect to velodyneVLP16 
     
 #### 7. Install umsa_xsens if using the xsens IMU/GPS. 
     1. cd ~/catkin_ws/src
