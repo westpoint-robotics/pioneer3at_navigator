@@ -4,11 +4,11 @@
 #
 shutdown_costmaps: false
 
-controller_frequency: 5.0
+controller_frequency: 20.0 # 5.0
 controller_patience: 3.0
 
 
-planner_frequency: 1.0
+planner_frequency: 0     # Global plan updates on new goal or path blocked only
 planner_patience: 5.0
 
 oscillation_timeout: 10.0
@@ -20,10 +20,7 @@ base_local_planner: "base_local_planner/TrajectoryPlannerROS"
 
 base_global_planner: "navfn/NavfnROS" #alternatives: navfn/NavfnROS, carrot_planner/CarrotPlanner
 
-
-#We plan to integrate recovery behaviors for turtlebot but currently those belong to gopher and still have to be adapted.
-## recovery behaviors; we avoid spinning, but we need a fall-back replanning
-#recovery_behavior_enabled: true
+recovery_behavior_enabled: true
 
 #recovery_behaviors:
   #- name: 'super_conservative_reset1'
