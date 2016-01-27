@@ -7,12 +7,11 @@ shutdown_costmaps: false
 controller_frequency: 20.0 # 5.0
 controller_patience: 3.0
 
-
 planner_frequency: 0     # Global plan updates on new goal or path blocked only
 planner_patience: 5.0
 
-oscillation_timeout: 10.0
-oscillation_distance: 0.2
+oscillation_timeout: 0.0
+oscillation_distance: 0.5
 
 # local planner - default is trajectory rollout
 base_local_planner: "base_local_planner/TrajectoryPlannerROS"
@@ -21,34 +20,19 @@ base_local_planner: "base_local_planner/TrajectoryPlannerROS"
 base_global_planner: "navfn/NavfnROS" #alternatives: navfn/NavfnROS, carrot_planner/CarrotPlanner
 
 recovery_behavior_enabled: true
+conservative_reset_dist:    2.0
+clearing_rotation_allowed:  true
 
-#recovery_behaviors:
-  #- name: 'super_conservative_reset1'
-    #type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  #- name: 'conservative_reset1'
-    #type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  #- name: 'aggressive_reset1'
-    #type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  #- name: 'clearing_rotation1'
-    #type: 'rotate_recovery/RotateRecovery'
-  #- name: 'super_conservative_reset2'
-    #type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  #- name: 'conservative_reset2'
-    #type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  #- name: 'aggressive_reset2'
-    #type: 'clear_costmap_recovery/ClearCostmapRecovery'
-  #- name: 'clearing_rotation2'
-    #type: 'rotate_recovery/RotateRecovery'
-
-#super_conservative_reset1:
-  #reset_distance: 3.0
-#conservative_reset1:
-  #reset_distance: 1.5
-#aggressive_reset1:
-  #reset_distance: 0.0
-#super_conservative_reset2:
-  #reset_distance: 3.0
-#conservative_reset2:
-  #reset_distance: 1.5
-#aggressive_reset2:
-  #reset_distance: 0.0
+recovery_behaviors: [{
+    name: conservative_reset, 
+    type: clear_costmap_recovery/ClearCostmapRecovery
+  }, {
+    name: rotate_recovery1,
+    type: rotate_recovery/RotateRecovery
+  }, {
+    name: aggressive_reset,
+    type: clear_costmap_recovery/ClearCostmapRecovery
+  }, {
+    name: rotate_recovery2,
+    type: rotate_recovery/RotateRecovery
+  }]

@@ -1,13 +1,13 @@
 local_costmap:
-   global_frame: map
+   global_frame: map  #odom
    robot_base_frame: base_link
    update_frequency: 5.0 # The frequency in Hz for the map to be updated.
    publish_frequency: 2.0 # The frequency in Hz for the map to publish display information.
    static_map: false
    rolling_window: true
-   width: 10.0
-   height: 10.0
-   resolution: 0.05 #    The resolution of the map in meters/cell. 
+   width: 3.0
+   height: 3.0
+   resolution: 0.02 #    The resolution of the map in meters/cell. 
    transform_tolerance: 1.5 # Specifies the delay in transform (tf) data that is tolerable in seconds.
    plugins:
     # - {name: obstacle_layer,          type: "costmap_2d::ObstacleLayer"}

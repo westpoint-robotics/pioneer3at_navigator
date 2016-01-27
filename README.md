@@ -19,7 +19,7 @@ Pioneer 3AT Robot Autonomous Navigator
     3. # Returned: Bus 002 Device 014: ID 067b:2303 Prolific Technology, Inc. PL2303 Serial Port
     4. # Vendor_ID:067b and Product_ID:2303, use these in #6 below.
     5. sudo su
-    6. echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", SYMLINK+="pioneer3at", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-pioneer.rules
+    6. echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="067b", ATTRS{idProduct}=="2303", SYMLINK+="pioneer", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-pioneer.rules
     7. sudo udevadm control --reload-rules
     8. # unplug usb cable to pioneer3at and replug it in.
     
