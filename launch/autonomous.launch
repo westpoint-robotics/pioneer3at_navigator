@@ -1,9 +1,9 @@
 <!-- Pioneer in USMA rviz catkin_ws/src/pioneerauto/launch/pioneer.rviz  -->
 <launch>
-    <arg name="initial_pose_x" default="3.21"/> <!-- dml office -->
-    <arg name="initial_pose_y" default="8.26"/> <!-- dml office -->
-<!--  <arg name="initial_pose_x" default="0.0"/>  TH111 Front -->
-<!--  <arg name="initial_pose_y" default="0.0"/>  TH111 Front -->
+<!--   <arg name="initial_pose_x" default="3.21"/>  dml office -->
+<!--    <arg name="initial_pose_y" default="8.26"/>  dml office -->
+  <arg name="initial_pose_x" default="0.0"/>   
+  <arg name="initial_pose_y" default="0.0"/>  
     <arg name="initial_pose_a" default="0.0"/>
 
     <node pkg="tf" type="static_transform_publisher" name="baselink_to_velodyne"
