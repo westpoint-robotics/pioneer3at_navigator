@@ -1,45 +1,30 @@
 #!/usr/bin/env python  
 
-
 import roslib
 import rospy
-import actionlib
+import sys
+from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import Odometry
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
-#move_base_msgs
-from move_base_msgs.msg import *
-
-def simple_move():
-
-    rospy.init_node('simple_move')
-
-    #Simple Action Client
-    sac = actionlib.SimpleActionClient('move_base', MoveBaseAction )
-
-    #create goal
-    goal = MoveBaseGoal()
-
-    #use self?
-    #set goal
-    goal.target_pose.pose.position.x = 1.0
-    goal.target_pose.pose.orientation.w = 1.0
-    goal.target_pose.header.frame_id = 'first_move'
-    goal.target_pose.header.stamp = rospy.Time.now()
-
-    #start listner
-    sac.wait_for_server()
-
-    #send goal
-    sac.send_goal(goal)
-
-    #finish
-    sac.wait_for_result()
-
-    #print result
-    print sac.get_result()
-
+pub = rospy.Publisher('/test/goal', PoseStamped, queue_size=1)
+delta_x = 1
+delta_y = 1
+global sub_once
+def odom_callback(data):
+    goal_pose=PoseStamped()
+    goal_pose.pose.position.x = data.pose.pose.position.x + delta_x
+    goal_pose.pose.position.y = data.pose.pose.position.y + delta_y    
+    goal_pose.pose.orientation = data.pose.pose.orientation
+    pub.publish(goal_pose)
+    str = "Moving  to goal of ({0},{1})" .format(goal_pose.pose.position.x, goal_pose.pose.position.y)
+    rospy.loginfo(str)
+    sub_once.unregister()
+    sys.exit(1)
 
 if __name__ == '__main__':
-    try:
-        simple_move()
-    except rospy.ROSInterruptException:
-        print "Keyboard Interrupt"
+    rospy.init_node('simple_goal_Py', anonymous=True)
+
+    sub_once=rospy.Subscriber('/robot_pose_ekf/odom_combined', PoseWithCovarianceStamped, odom_callback)
+    rospy.spin()
+
