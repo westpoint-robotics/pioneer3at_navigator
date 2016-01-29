@@ -21,7 +21,7 @@
     <rosparam file="$(find pioneer3at_navigator)/param/global_costmap_params.yaml" command="load" />  <!--Changed OK -->
     <!-- TODO dwa planner is configured for Kubuki velocities, need to adjust to pioneer-->
     <rosparam file="$(find pioneer3at_navigator)/param/dwa_local_planner_params.yaml" command="load" />
-    <rosparam file="$(find pioneer3at_navigator)/param/move_base_params.yaml" command="load" />
+    <!--<rosparam file="$(find pioneer3at_navigator)/param/move_base_params.yaml" command="load" /> -->
     <rosparam file="$(find pioneer3at_navigator)/param/global_planner_params.yaml" command="load" />
     <rosparam file="$(find pioneer3at_navigator)/param/navfn_global_planner_params.yaml" command="load" />
     <!-- external params file that could be loaded into the move_base namespace -->
