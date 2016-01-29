@@ -52,10 +52,11 @@ Pioneer 3AT Robot Autonomous Navigator
     2. git clone https://github.com/westpoint-robotics/usma_xsens.git
     3. sudo apt-get install ros-indigo-gps-common libpcap0.8-dev
     4. sudo su
-    5. echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", ATTRS{product}=="MTi-G-700 GPS/INS", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules
-    6. exit
-    7. cd ~/catkin_make
-    8. catkin_make
+    5. echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", ATTRS{product}=="MTi-G-700 GPS/INS", SYMLINK+="xsens", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules
+    6. udevadm control --reload-rules
+    7. exit
+    8. cd ~/catkin_make
+    9. catkin_make
 
 #### 8. Test the install of usma_xsens.
     1. roslaunch xsens_driver xsens_driver.launch 
