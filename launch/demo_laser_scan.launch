@@ -1,0 +1,63 @@
+<!-- 
+Example launch file: launches the scan matcher with pre-recorded data
+-->
+
+<launch>
+  <arg name="IS_TWISTSTAMPED" default="true" />
+  <arg name="use_rviz" default="true" />
+
+  #### provide visualization with rviz ##########################
+
+  <param name="/stamped_vel" value="$(arg IS_TWISTSTAMPED)"/>
+
+  <group if="$(arg use_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" 
+          args="-d $(find pioneer3at_navigator)/launch/include/laser_odom.rviz"/>
+  </group>
+
+  #### publish an base_link -> laser transform ###########
+
+    <node pkg="tf" type="static_transform_publisher" name="baselink_to_velodyne"
+    args="0 0.18 0.475 0 0 0 base_link velodyne 100" />
+
+
+    <!-- ========== Start the IMU   ========== -->
+ 	<node pkg="xsens_driver" type="mtnode_new.py" name="mtnode_new" output="screen" respawn="true">
+    </node>
+
+
+  #### start the laser scan_matcher ##############################
+
+    <include file="$(find pioneer3at_navigator)/launch/VLP16_with_laserscan.launch">
+    </include>     
+
+  <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
+    name="laser_scan_matcher_node" output="screen">
+     <!--      <remap from="/RosAria/pose" to="/odom"/>  -->
+
+    <param name="max_iterations" value="10"/>
+
+  </node>
+
+  #### start pioneer robot with joystick ##############################
+
+     <!-- ========== Integrate Pioneer Robot ========== -->
+    <include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
+
+    <node pkg="rosaria" type="RosAria" name="RosAria">
+        <param name="port" value="/dev/pioneer"/>
+     <!--   <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
+        <remap from="/tf" to="/rosariatf"/>
+    </node>
+
+    <!-- ========== Joystick  and Command Velocity Mux ========== -->
+    <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+
+    <node pkg="nodelet" type="nodelet" name="cmd_vel_mux" args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+        <param name="yaml_cfg_file" value="$(find pioneer3at_navigator)/param/mux.yaml"/>
+        <remap from="cmd_vel_mux/output" to="/RosAria/cmd_vel"/>
+    </node>
+
+    <include file="$(find pioneer3at_navigator)/launch/xbox360_teleop.launch"/>  
+
+</launch>

@@ -1,9 +1,9 @@
 <!-- Pioneer in USMA rviz catkin_ws/src/pioneerauto/launch/pioneer.rviz  -->
 <launch>
-<!--   <arg name="initial_pose_x" default="3.21"/>  dml office -->
-<!--    <arg name="initial_pose_y" default="8.26"/>  dml office -->
-  <arg name="initial_pose_x" default="0.0"/>   
-  <arg name="initial_pose_y" default="0.0"/>  
+   <arg name="initial_pose_x" default="3.21"/> <!-- dml office -->
+   <arg name="initial_pose_y" default="8.26"/> <!--  dml office -->
+<!--  <arg name="initial_pose_x" default="0.0"/>   -->
+<!--  <arg name="initial_pose_y" default="0.0"/>  -->
     <arg name="initial_pose_a" default="0.0"/>
 
     <node pkg="tf" type="static_transform_publisher" name="baselink_to_velodyne"
@@ -65,7 +65,7 @@
         <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
     </include>
     <!-- Start an rviz node with a custom configuration  -->
-    <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find pioneer3at_navigator)/launch/pioneer2.rviz"/>
+    <node pkg="rviz" type="rviz" output="screen" name="rviz" args="-d $(find pioneer3at_navigator)/launch/include/pioneer2.rviz"/>
 -->
 </launch>
 <!--
