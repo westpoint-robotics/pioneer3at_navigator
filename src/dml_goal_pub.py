@@ -70,7 +70,7 @@ class NavTest():
         rospy.loginfo("Initial pose found at "+str(self.initial_pose.pose.pose.position.x)+","+str(self.initial_pose.pose.pose.position.y)+". Starting navigation test")
 
         # Calculating goal positions based on initial position.
-        deltas = [(1,0),(1,-0.5),(0,0)]
+        deltas = [(1,0),(1,-0.5),(1.5,0)]
         locations = []               
         for delta_x,delta_y in deltas:
             goal_pose = Pose()
@@ -137,19 +137,20 @@ class NavTest():
             # How long have we been running?
             running_time = rospy.Time.now() - start_time
             running_time = running_time.secs / 60.0
-               
-            # Increment the counters
-            i += 1
-            n_goals += 1
-            if (i > len(locations)):
-                rospy.signal_shutdown("NO MORE GOALS TO ACHIEVE") 
             
             # Print a summary success/failure, distance traveled and time elapsed
+            n_goals += 1
             rospy.loginfo("Success so far: " + str(n_successes) + "/" + 
                           str(n_goals) + " = " + 
                           str(100 * n_successes/n_goals) + "%")
             rospy.loginfo("Running time: " + str(trunc(running_time, 1)) + 
                           " min Distance: " + str(trunc(distance_traveled, 1)) + " m")
+               
+            # Increment the counters
+            i += 1
+            if (i >= len(locations)):
+                rospy.signal_shutdown("NO MORE GOALS TO ACHIEVE") 
+
             rospy.sleep(self.rest_time)
             
     def update_current_pose(self, current_pose):
