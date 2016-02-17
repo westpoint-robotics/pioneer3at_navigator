@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 
-""" nav_test.py - Version 0.1 2012-01-10
+""" Code modified by: Dominic Larkin 5FEB2016
 
+    
     Command a robot to move autonomously among a number of goal locations defined in the map frame.
-    On each round, select a new random sequence of locations, then attempt to move to each location
-    in succession.  Keep track of success rate, time elapsed, and total distance traveled.
+    Attempt to move to each location in succession.  Keep track of success rate, time elapsed, and 
+    total distance traveled. The goal locations are determined by adding distances to the current
+    location of the robot on the map.
 
+    based on nav_test.py - Version 0.1 2012-01-10. Modified for use with West Point Robotics.
     Created for the Pi Robot Project: http://www.pirobot.org
     Copyright (c) 2012 Patrick Goebel.  All rights reserved.
 
+    Original License:
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
     (at your option) any later version.5
-    
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details at:
-    
-    http://www.gnu.org/licenses/gpl.html
-      
 """
 
-import roslib; roslib.load_manifest('rbx1_nav')
+import roslib;
 import rospy
 import actionlib
 from actionlib_msgs.msg import *
@@ -34,53 +30,55 @@ from math import pow, sqrt
 
 class NavTest():
     def __init__(self):
-        rospy.init_node('nav_test', anonymous=True)
-        
-        rospy.on_shutdown(self.shutdown)
+        rospy.init_node('nav_test', anonymous=True)        
+        rospy.on_shutdown(self.shutdown)        
+
+        # A variable to hold the initial pose of the robot
+        self.initial_pose = PoseWithCovarianceStamped()
+        self.current_pose = PoseWithCovarianceStamped()
         
         # How long in seconds should the robot pause at each location?
         self.rest_time = rospy.get_param("~rest_time", 10)
-        
-        # Are we running in the fake simulator?
-        self.fake_test = rospy.get_param("~fake_test", False)
         
         # Goal state return values
         goal_states = ['PENDING', 'ACTIVE', 'PREEMPTED', 
                        'SUCCEEDED', 'ABORTED', 'REJECTED',
                        'PREEMPTING', 'RECALLING', 'RECALLED',
-                       'LOST']
-        
-        # Set up the goal locations. Poses are defined in the map frame.  
-        # An easy way to find the pose coordinates is to point-and-click
-        # Nav Goals in RViz when running in the simulator.
-        # Pose coordinates are then displayed in the terminal
-        # that was used to launch RViz.
-        locations = dict()
-        
-        locations['hall_foyer'] = Pose(Point(0.643, 4.720, 0.000), Quaternion(0.000, 0.000, 0.223, 0.975))
-        locations['hall_kitchen'] = Pose(Point(-1.994, 4.382, 0.000), Quaternion(0.000, 0.000, -0.670, 0.743))
-        locations['hall_bedroom'] = Pose(Point(-3.719, 4.401, 0.000), Quaternion(0.000, 0.000, 0.733, 0.680))
-        locations['living_room_1'] = Pose(Point(0.720, 2.229, 0.000), Quaternion(0.000, 0.000, 0.786, 0.618))
-        locations['living_room_2'] = Pose(Point(1.471, 1.007, 0.000), Quaternion(0.000, 0.000, 0.480, 0.877))
-        locations['dining_room_1'] = Pose(Point(-0.861, -0.019, 0.000), Quaternion(0.000, 0.000, 0.892, -0.451))
+                       'LOST']        
         
         # Publisher to manually control the robot (e.g. to stop it)
-        self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist)
+        self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
         
         # Subscribe to the move_base action server
-        self.move_base = actionlib.SimpleActionClient("move_base", MoveBaseAction)
-        
+        self.move_base = actionlib.SimpleActionClient("move_base", MoveBaseAction)        
         rospy.loginfo("Waiting for move_base action server...")
         
         # Wait 60 seconds for the action server to become available
-        self.move_base.wait_for_server(rospy.Duration(60))
-        
+        self.move_base.wait_for_server(rospy.Duration(60))        
         rospy.loginfo("Connected to move base server")
+
         
-        # A variable to hold the initial pose of the robot to be set by 
-        # the user in RViz
-        initial_pose = PoseWithCovarianceStamped()
-        
+        # Make sure we have the initial pose
+        rospy.loginfo("Waiting for initial pose")
+        rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, self.update_current_pose)
+        while self.initial_pose.header.stamp == "":
+            # Get the initial pose from the robot
+            rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped)
+            rospy.sleep(1) 
+        rospy.sleep(.25) 
+        self.initial_pose = self.current_pose      
+        rospy.loginfo("Initial pose found at "+str(self.initial_pose.pose.pose.position.x)+","+str(self.initial_pose.pose.pose.position.y)+". Starting navigation test")
+
+        # Calculating goal positions based on initial position.
+        deltas = [(1,0),(1,-0.5),(1.5,0)]
+        locations = []               
+        for delta_x,delta_y in deltas:
+            goal_pose = Pose()
+            goal_pose.position.x = self.initial_pose.pose.pose.position.x + delta_x
+            goal_pose.position.y = self.initial_pose.pose.pose.position.y + delta_y
+            goal_pose.orientation = self.initial_pose.pose.pose.orientation                        
+            locations.append(goal_pose)
+
         # Variables to keep track of success rate, running time,
         # and distance traveled
         n_locations = len(locations)
@@ -90,66 +88,31 @@ class NavTest():
         distance_traveled = 0
         start_time = rospy.Time.now()
         running_time = 0
-        location = ""
-        last_location = ""
-        
-        # Get the initial pose from the user
-        rospy.loginfo("*** Click the 2D Pose Estimate button in RViz to set the robot's initial pose...")
-        rospy.wait_for_message('initialpose', PoseWithCovarianceStamped)
-        self.last_location = Pose()
-        rospy.Subscriber('/amcl_pose', PoseWithCovarianceStamped, self.update_initial_pose)
-        
-        # Make sure we have the initial pose
-        while initial_pose.header.stamp == "":
-            rospy.sleep(1)
-            
-        rospy.loginfo("Starting navigation test")
-        
+
         # Begin the main loop and run through a sequence of locations
+        i = 0
         while not rospy.is_shutdown():
-            # If we've gone through the current sequence,
-            # start with a new random sequence
-            if i == n_locations:
-                i = 0
-                sequence = sample(locations, n_locations)
-                # Skip over first location if it is the same as
-                # the last location
-                if sequence[0] == last_location:
-                    i = 1
-            
-            # Get the next location in the current sequence
-            location = sequence[i]
                         
             # Keep track of the distance traveled.
-            # Use updated initial pose if available.
-            if initial_pose.header.stamp == "":
-                distance = sqrt(pow(locations[location].position.x - 
-                                    locations[last_location].position.x, 2) +
-                                pow(locations[location].position.y - 
-                                    locations[last_location].position.y, 2))
+            if i != 0:
+                distance = sqrt(pow(locations[i].position.x - 
+                                    locations[i-1].position.x, 2) +
+                                pow(locations[i].position.y - 
+                                    locations[i-1].position.y, 2))
             else:
-                rospy.loginfo("Updating current pose.")
-                distance = sqrt(pow(locations[location].position.x - 
-                                    initial_pose.pose.pose.position.x, 2) +
-                                pow(locations[location].position.y - 
-                                    initial_pose.pose.pose.position.y, 2))
-                initial_pose.header.stamp = ""
-            
-            # Store the last location for distance calculations
-            last_location = location
-            
-            # Increment the counters
-            i += 1
-            n_goals += 1
+                distance = sqrt(pow(locations[i].position.x - 
+                                    self.initial_pose.pose.pose.position.x, 2) +
+                                pow(locations[i].position.y - 
+                                    self.initial_pose.pose.pose.position.y, 2))         
         
             # Set up the next goal location
             self.goal = MoveBaseGoal()
-            self.goal.target_pose.pose = locations[location]
+            self.goal.target_pose.pose = locations[i]
             self.goal.target_pose.header.frame_id = 'map'
             self.goal.target_pose.header.stamp = rospy.Time.now()
             
             # Let the user know where the robot is going next
-            rospy.loginfo("Going to: " + str(location))
+            rospy.loginfo("Going to: " + str(self.goal.target_pose.pose.position.x)+ ","+str(self.goal.target_pose.pose.position.y))
             
             # Start the robot toward the next location
             self.move_base.send_goal(self.goal)
@@ -176,15 +139,23 @@ class NavTest():
             running_time = running_time.secs / 60.0
             
             # Print a summary success/failure, distance traveled and time elapsed
+            n_goals += 1
             rospy.loginfo("Success so far: " + str(n_successes) + "/" + 
                           str(n_goals) + " = " + 
                           str(100 * n_successes/n_goals) + "%")
             rospy.loginfo("Running time: " + str(trunc(running_time, 1)) + 
                           " min Distance: " + str(trunc(distance_traveled, 1)) + " m")
+               
+            # Increment the counters
+            i += 1
+            if (i >= len(locations)):
+                rospy.signal_shutdown("NO MORE GOALS TO ACHIEVE") 
+
             rospy.sleep(self.rest_time)
             
-    def update_initial_pose(self, initial_pose):
-        self.initial_pose = initial_pose
+    def update_current_pose(self, current_pose):
+        rospy.loginfo("Current Pose is: " + str(current_pose.pose.pose.position.x)+ ","+str(current_pose.pose.pose.position.y))        
+        self.current_pose = current_pose
 
     def shutdown(self):
         rospy.loginfo("Stopping the robot...")
