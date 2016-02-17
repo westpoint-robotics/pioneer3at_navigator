@@ -23,7 +23,7 @@ import roslib;
 import rospy
 import actionlib
 from actionlib_msgs.msg import *
-from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Point, Quaternion, Twist
+from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Point, Quaternion, Twist, PoseStamped
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from nav_msgs.msg import Odometry 
 from random import sample
@@ -35,10 +35,8 @@ class NavTest():
         rospy.on_shutdown(self.shutdown)        
 
         # A variable to hold the initial pose of the robot
-        self.initial_pose = Odometry()
-        self.current_pose = Odometry()
-        #self.initial_pose = PoseWithCovarianceStamped()
-        #self.current_pose = PoseWithCovarianceStamped()
+        self.initial_pose = PoseStamped()
+        self.current_pose = PoseStamped()
         
         # How long in seconds should the robot pause at each location?
         self.rest_time = rospy.get_param("~rest_time", 10)
@@ -63,23 +61,23 @@ class NavTest():
         
         # Make sure we have the initial pose
         rospy.loginfo("Waiting for initial pose")
-        rospy.Subscriber('/odom', PoseWithCovarianceStamped, self.update_current_pose)
+        rospy.Subscriber('/pose_stamped', PoseStamped, self.update_current_pose)
         while self.initial_pose.header.stamp == "":
             # Get the initial pose from the robot
-            rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped)
+            rospy.wait_for_message('/pose_stamped', PoseStamped)
             rospy.sleep(1) 
         rospy.sleep(.25) 
         self.initial_pose = self.current_pose      
-        rospy.loginfo("Initial pose found at "+str(self.initial_pose.pose.pose.position.x)+","+str(self.initial_pose.pose.pose.position.y)+". Starting navigation test")
+        rospy.loginfo("Initial pose found at "+str(self.initial_pose.pose.position.x)+","+str(self.initial_pose.pose.position.y)+". Starting navigation test")
 
         # Calculating goal positions based on initial position.
-        deltas = [(1,0),(1,-0.5),(1.5,0)]
+        deltas = [(5,0),(7,-1.5),(9.0,0),(0,0)]
         locations = []               
         for delta_x,delta_y in deltas:
             goal_pose = Pose()
-            goal_pose.position.x = self.initial_pose.pose.pose.position.x + delta_x
-            goal_pose.position.y = self.initial_pose.pose.pose.position.y + delta_y
-            goal_pose.orientation = self.initial_pose.pose.pose.orientation                        
+            goal_pose.position.x = self.initial_pose.pose.position.x + delta_x
+            goal_pose.position.y = self.initial_pose.pose.position.y + delta_y
+            goal_pose.orientation = self.initial_pose.pose.orientation                        
             locations.append(goal_pose)
 
         # Variables to keep track of success rate, running time,
@@ -104,9 +102,9 @@ class NavTest():
                                     locations[i-1].position.y, 2))
             else:
                 distance = sqrt(pow(locations[i].position.x - 
-                                    self.initial_pose.pose.pose.position.x, 2) +
+                                    self.initial_pose.pose.position.x, 2) +
                                 pow(locations[i].position.y - 
-                                    self.initial_pose.pose.pose.position.y, 2))         
+                                    self.initial_pose.pose.position.y, 2))         
         
             # Set up the next goal location
             self.goal = MoveBaseGoal()
@@ -157,7 +155,7 @@ class NavTest():
             rospy.sleep(self.rest_time)
             
     def update_current_pose(self, current_pose):
-        rospy.loginfo("Current Pose is: " + str(current_pose.pose.pose.position.x)+ ","+str(current_pose.pose.pose.position.y))        
+        rospy.loginfo("Current Pose is: %.3f,%.3f" %((current_pose.pose.position.x),(current_pose.pose.position.y)))        
         self.current_pose = current_pose
 
     def shutdown(self):

@@ -37,8 +37,6 @@ class NavTest():
         # A variable to hold the initial pose of the robot
         self.initial_pose = Odometry()
         self.current_pose = Odometry()
-        #self.initial_pose = PoseWithCovarianceStamped()
-        #self.current_pose = PoseWithCovarianceStamped()
         
         # How long in seconds should the robot pause at each location?
         self.rest_time = rospy.get_param("~rest_time", 10)
@@ -63,10 +61,10 @@ class NavTest():
         
         # Make sure we have the initial pose
         rospy.loginfo("Waiting for initial pose")
-        rospy.Subscriber('/odom', PoseWithCovarianceStamped, self.update_current_pose)
+        rospy.Subscriber('/odom', Odometry, self.update_current_pose)
         while self.initial_pose.header.stamp == "":
             # Get the initial pose from the robot
-            rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped)
+            rospy.wait_for_message('/odom', Odometry)
             rospy.sleep(1) 
         rospy.sleep(.25) 
         self.initial_pose = self.current_pose      
