@@ -26,9 +26,8 @@
 
     <node pkg="rosaria" type="RosAria" name="RosAria">
         <param name="port" value="/dev/pioneer"/>
-        <param name="tf_prefix" value="RosAria"/>
-     <!--   <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/>
-        <remap from="/tf" to="/rosariatf"/>   -->
+     <!--   <param name="tf_prefix" value="RosAria"/>
+        <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
     </node>
 
     <!-- ========== Joystick  and Command Velocity Mux ========== -->
@@ -51,6 +50,7 @@
     <!--  ************** Navigation  ***************  -->
     <include file="$(find pioneer3at_navigator)/launch/includes/limited_move_base.launch.xml"/>
 
+    <!-- Publishes the transform from odom to map.  -->
     <include file="$(find pioneer3at_navigator)/launch/includes/amcl.launch.xml">
         <arg name="scan_topic" value="/scan"/>
         <arg name="use_map_topic" value="true"/>
