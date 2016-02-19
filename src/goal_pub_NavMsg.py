@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 """ Code modified by: Dominic Larkin 5FEB2016
-
     
     Command a robot to move autonomously among a number of goal locations defined in the map frame.
     Attempt to move to each location in succession.  Keep track of success rate, time elapsed, and 
@@ -9,14 +8,14 @@
     location of the robot on the map.
 
     based on nav_test.py - Version 0.1 2012-01-10. Modified for use with West Point Robotics.
-    Created for the Pi Robot Project: http://www.pirobot.org
+    Originaly created for the Pi Robot Project: http://www.pirobot.org
     Copyright (c) 2012 Patrick Goebel.  All rights reserved.
 
     Original License:
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.5
+    (at your option) any later version.
 """
 
 import roslib;
@@ -31,6 +30,10 @@ from math import pow, sqrt
 
 class NavTest():
     def __init__(self):
+        # A list of goal coordinates to move to. This assumes (0,0) is the coordinate
+        # that the robot started at.
+        deltas = [(0.5,0),(0.5,0)]
+
         rospy.init_node('nav_test', anonymous=True)        
         rospy.on_shutdown(self.shutdown)        
 
@@ -68,11 +71,10 @@ class NavTest():
             rospy.sleep(1) 
         rospy.sleep(.25) 
         self.initial_pose = self.current_pose      
-        rospy.loginfo("Initial pose found at "+str(self.initial_pose.pose.pose.position.x)+","+str(self.initial_pose.pose.pose.position.y)+". Starting navigation test")
+        rospy.loginfo("Initial pose found at (%.4f,%.4f)" %(self.initial_pose.pose.pose.position.x,self.initial_pose.pose.pose.position.y))
 
         # Calculating goal positions based on initial position.
-        deltas = [(1,0),(1,-0.5),(1.5,0)]
-        locations = []               
+        locations = []        
         for delta_x,delta_y in deltas:
             goal_pose = Pose()
             goal_pose.position.x = self.initial_pose.pose.pose.position.x + delta_x
@@ -113,7 +115,7 @@ class NavTest():
             self.goal.target_pose.header.stamp = rospy.Time.now()
             
             # Let the user know where the robot is going next
-            rospy.loginfo("Going to: " + str(self.goal.target_pose.pose.position.x)+ ","+str(self.goal.target_pose.pose.position.y))
+            rospy.loginfo("Going to: (%.4f,%.4f)" %(self.goal.target_pose.pose.position.x,self.goal.target_pose.pose.position.y))
             
             # Start the robot toward the next location
             self.move_base.send_goal(self.goal)
@@ -144,8 +146,7 @@ class NavTest():
             rospy.loginfo("Success so far: " + str(n_successes) + "/" + 
                           str(n_goals) + " = " + 
                           str(100 * n_successes/n_goals) + "%")
-            rospy.loginfo("Running time: " + str(trunc(running_time, 1)) + 
-                          " min Distance: " + str(trunc(distance_traveled, 1)) + " m")
+            rospy.loginfo("Running time: %.2f min Distance: %.3f"  % (running_time,distance_traveled))
                
             # Increment the counters
             i += 1
@@ -155,7 +156,7 @@ class NavTest():
             rospy.sleep(self.rest_time)
             
     def update_current_pose(self, current_pose):
-        rospy.loginfo("Current Pose is: " + str(current_pose.pose.pose.position.x)+ ","+str(current_pose.pose.pose.position.y))        
+        rospy.loginfo("Current Pose is: (%.4f,%.4f)" %((current_pose.pose.pose.position.x),(current_pose.pose.pose.position.y)))        
         self.current_pose = current_pose
 
     def shutdown(self):
@@ -164,16 +165,11 @@ class NavTest():
         rospy.sleep(2)
         self.cmd_vel_pub.publish(Twist())
         rospy.sleep(1)
-      
-def trunc(f, n):
-    # Truncates/pads a float f to n decimal places without rounding
-    slen = len('%.*f' % (n, f))
-    return float(str(f)[:slen])
 
 if __name__ == '__main__':
     try:
         NavTest()
         rospy.spin()
     except rospy.ROSInterruptException:
-        rospy.loginfo("AMCL navigation test finished.")
+        rospy.loginfo("Navigation test finished.")
 

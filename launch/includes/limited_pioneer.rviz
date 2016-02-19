@@ -163,10 +163,10 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: false
+      Enabled: true
       Name: Map
       Topic: /map
-      Value: false
+      Value: true
     - Class: rviz/Group
       Displays:
         - Alpha: 0.7
