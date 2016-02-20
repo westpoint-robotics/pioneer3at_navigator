@@ -2,8 +2,8 @@
 <launch>
 
 <!-- Transform for Velodyne to map TODO fix this-->
-    <node pkg="tf" type="static_transform_publisher" name="baselink_to_velodyne"
-    args="0 0.18 0.475 0 0 0 base_link velodyne 100" />
+    <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
+    args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
 
      <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
     args="0 0 0 0 0 0 top_plate imu 100" />

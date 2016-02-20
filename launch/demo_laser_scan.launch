@@ -17,8 +17,8 @@ Example launch file: launches the scan matcher with pre-recorded data
 
   #### publish an base_link -> laser transform ###########
 
-    <node pkg="tf" type="static_transform_publisher" name="baselink_to_velodyne"
-    args="0 0.18 0.475 0 0 0 base_link velodyne 100" />
+    <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
+    args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
 
 
     <!-- ========== Start the IMU   ========== -->
