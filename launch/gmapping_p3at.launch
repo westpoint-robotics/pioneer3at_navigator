@@ -1,0 +1,45 @@
+<!-- Pioneer in USMA rviz catkin_ws/src/pioneerauto/launch/pioneer.rviz  -->
+<launch>
+
+    <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
+    args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
+    args="0 0 0 0 0 0 top_plate imu 100" />
+
+     <!-- ========== Integrate Pioneer Robot ========== -->
+    <include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
+
+    <node pkg="rosaria" type="RosAria" name="RosAria">
+        <param name="port" value="/dev/pioneer"/>
+        <remap from="/RosAria/pose" to="/odom"/>
+     <!--   <param name="tf_prefix" value="RosAria"/>
+        <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
+    </node>
+
+    <!-- ========== Joystick and Command Velocity Mux ========== -->
+    <node pkg="nodelet" type="nodelet" name="mobile_base_nodelet_manager" args="manager"/>
+
+    <node pkg="nodelet" type="nodelet" name="cmd_vel_mux" args="load yocs_cmd_vel_mux/CmdVelMuxNodelet mobile_base_nodelet_manager">
+        <param name="yaml_cfg_file" value="$(find pioneer3at_navigator)/param/mux.yaml"/>
+        <remap from="cmd_vel_mux/output" to="/RosAria/cmd_vel"/>
+    </node>
+
+    <include file="$(find pioneer3at_navigator)/launch/xbox360_teleop.launch"/>  
+
+    <!-- ========== Start the 3d Laser and Laser Scan ========== -->    
+    <include file="$(find pioneer3at_navigator)/launch/VLP16_with_laserscan.launch">
+    </include>
+
+    <!-- ========== Start Gmapping ========== -->
+
+    <node pkg="gmapping" type="slam_gmapping" name="pioneer_slam"/>
+
+    <!-- Start an rviz node with a custom configuration  -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-l $(find pioneer3at_navigator)/rviz.log -d $(find pioneer3at_navigator)/launch/includes/gmapping.rviz">
+    </node>
+
+<!-- To save the map run:
+rosrun map_server map_saver
+-->
+</launch>

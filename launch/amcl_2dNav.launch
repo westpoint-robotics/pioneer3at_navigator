@@ -1,9 +1,9 @@
 <!-- Pioneer in USMA rviz catkin_ws/src/pioneerauto/launch/pioneer.rviz  -->
 <launch>
-   <arg name="initial_pose_x" default="3.34"/> <!-- dml office -->
-   <arg name="initial_pose_y" default="7.84"/> <!--  dml office -->
-<!--  <arg name="initial_pose_x" default="0.0"/>   -->
-<!--  <arg name="initial_pose_y" default="0.0"/>  -->
+<!--  <arg name="initial_pose_x" default="3.15"/>  dml office -->
+<!--   <arg name="initial_pose_y" default="8.07"/>   dml office -->
+  <arg name="initial_pose_x" default="0.0"/>   
+  <arg name="initial_pose_y" default="0.0"/><!--  -->
     <arg name="initial_pose_a" default="0.0"/>
 
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
@@ -12,12 +12,9 @@
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
     args="0 0 0 0 0 0 top_plate imu 100" />
 
-    <node pkg="tf" type="static_transform_publisher" name="baselink_to_basefootprint"
-    args="0 0 0 0 0 0 base_link base_footprint 100" />
-
     <!-- ========== Load Map Server   ========= -->
     <node pkg="map_server" type="map_server" name="map_server" output="screen"
-    args="$(find pioneer3at_navigator)/maps/TH111map.yaml">
+    args="$(find pioneer3at_navigator)/maps/ThayerNorthMinus.yaml">
            <param name="frame_id" value="/map"/>
     </node>
 
@@ -26,7 +23,8 @@
 
     <node pkg="rosaria" type="RosAria" name="RosAria">
         <param name="port" value="/dev/pioneer"/>
-     <!--   <param name="tf_prefix" value="RosAria"/>
+      <!--  <remap from="/RosAria/pose" to="/odom"/>
+        <param name="tf_prefix" value="RosAria"/>
         <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
     </node>
 
@@ -40,8 +38,8 @@
 
     <include file="$(find pioneer3at_navigator)/launch/xbox360_teleop.launch"/>  
 
-    <!-- ========== Start the IMU   ========== -->
-    <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>  
+    <!-- ========== Start the IMU   ========== 
+    <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>  -->
 
     <!-- ========== Start the 3d Laser and Laser Scan ========== -->    
     <include file="$(find pioneer3at_navigator)/launch/VLP16_with_laserscan.launch">

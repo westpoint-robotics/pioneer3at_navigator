@@ -6,8 +6,9 @@ obstacle_layer:
     raytrace_range: 5
     transform_tolerance: 0.2
     map_type: costmap
-
-    observation_sources: laser_scan_sensor
+    max_obstacle_height:    0.57
+    min_obstacle_height: 0.02
+    observation_sources: laser_scan_sensor  point_cloud_sensor
 
     laser_scan_sensor:
         sensor_frame: velodyne
@@ -16,11 +17,19 @@ obstacle_layer:
         marking: true
         clearing: true
 
+    point_cloud_sensor:
+        sensor_frame: velodyne
+        data_type: PointCloud2
+        topic: /velodyne_points
+        marking: true
+        clearing: true
+        min_obstacle_height: .20
+
 #cost_scaling_factor and inflation_radius were now moved to the inflation_layer ns
 inflation_layer:
   enabled:              true
-  cost_scaling_factor:  10.0  # exponential rate at which the obstacle cost drops off (default: 10)
-  inflation_radius:     0.10  # max. distance from an obstacle at which costs are incurred for planning paths.
+  cost_scaling_factor:  15.0  # exponential rate at which the obstacle cost drops off (default: 10)
+  inflation_radius:     0.30  # max. distance from an obstacle at which costs are incurred for planning paths.
 
 static_layer:
   enabled:              true

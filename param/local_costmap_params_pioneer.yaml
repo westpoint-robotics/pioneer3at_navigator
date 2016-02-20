@@ -5,8 +5,8 @@ local_costmap:
    publish_frequency: 10.0 # The frequency in Hz for the map to publish display information.
    static_map: false
    rolling_window: true
-   width: 5.0
-   height: 5.0
+   width: 10.0
+   height: 10.0
    resolution: 0.025 #    The resolution of the map in meters/cell. 
 
    plugins:
