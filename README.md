@@ -43,6 +43,7 @@ Pioneer 3AT Robot Autonomous Navigator
 
 #### 6. Make a network connection for the velodyne VLP16.
 In the project root directory the network settings are saved in a file called velodyneVLP16 and veldoyne32E.
+
 1. `sudo chown root:root velodyneVLP16`
 2. `sudo chown root:root velodyne32E`
 3. `sudo chmod 600 velodyneVLP16`
