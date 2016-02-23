@@ -26,8 +26,8 @@ Pioneer 3AT Robot Autonomous Navigator
 8. Unplug usb cable to pioneer3at and replug it in.
 
 #### 3. Test the pioneer3at install
-1. `roslaunch pioneer3at_navigator teleop_only.launch 
-2. `# while holding in the left bumper button on xbox controller, move the left joystick to drive the robot.
+1. `roslaunch pioneer3at_navigator teleop_only.launch`
+2. # while holding in the left bumper button on xbox controller, move the left joystick to drive the robot.
 
 #### 4. Install p2os_urdf. On 25JAN2016 p2os_urdf was unavailable thru apt-get.
 1. Locate the file: p2os_urdf.tar.gz in the pioneer3at_navigator src directory.
