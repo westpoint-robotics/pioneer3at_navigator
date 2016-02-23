@@ -1,0 +1,8 @@
+<launch>
+
+	<include file="$(find pioneer3at_navigator)/launch/vision.launch" />
+	<include file="$(find pioneer3at_navigator)/launch/movement.launch" />
+	<include file="$(find pioneer3at_navigator)/launch/gui.launch" />
+	<include file="$(find pioneer3at_navigator)/launch/remote_teleop.launch" />
+
+</launch>
