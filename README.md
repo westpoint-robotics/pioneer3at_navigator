@@ -14,7 +14,7 @@ Pioneer 3AT Robot Autonomous Navigator
 8. `rospack profile`
 
 #### 2. Use UDEV rules to create a device alias for Pioneer3At. 
-(http://www.reactivated.net/writing_udev_rules.html)
+(from: http://www.reactivated.net/writing_udev_rules.html)
 
 1. Find the vendor_id and product_id of the usb to serial adapter
 2. `sudo lsusb`
@@ -36,21 +36,21 @@ Pioneer 3AT Robot Autonomous Navigator
 4. `catkin_make `
 
 #### 5. Install the velodyne laser packages from github.
-Do not install the velodyne driver from the ros repository (DO NOT use the command sudo apt-get install ros-indigo-velodyne). Use the below directions.
-
 1. `cd ~/catkin_ws/src`
 2. `git clone https://github.com/ros-drivers/velodyne.git`
 3. `cd ~/catkin_make`
 4. `catkin_make`
 
 #### 6. Make a network connection for the velodyne VLP16.
-In the pioneer_navigator root directory the network settings are saved in a file called velodyneVLP16.
-
+In the project root directory the network settings are saved in a file called velodyneVLP16 and veldoyne32E.
 1. `sudo chown root:root velodyneVLP16`
-2. `sudo chmod 600 velodyneVLP16`
-3. `sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/`
-4. `sudo service network-manager restart`
-5. In the network-manager gui, connect to velodyneVLP16 or velodyne32E.
+2. `sudo chown root:root velodyne32E`
+3. `sudo chmod 600 velodyneVLP16`
+4. `sudo chmod 600 velodyneV32E`
+5. `sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/`
+6. `sudo cp velodyne32E /etc/NetworkManager/system-connections/`
+7. `sudo service network-manager restart`
+In the network-manager gui, connect to velodyneVLP16 or velodyne32E
 
 #### 7. Install umsa_xsens if using the xsens IMU/GPS. 
 Use the XSens driver from West Point Robitics at https://github.com/westpoint-robotics/usma_xsens.git. This has the support for the newer protocol used.
