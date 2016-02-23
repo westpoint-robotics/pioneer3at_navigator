@@ -27,7 +27,7 @@ Pioneer 3AT Robot Autonomous Navigator
 
 #### 3. Test the pioneer3at install
 1. `roslaunch pioneer3at_navigator teleop_only.launch`
-2. # while holding in the left bumper button on xbox controller, move the left joystick to drive the robot.
+2. while holding in the left bumper button on xbox controller, move the left joystick to drive the robot.
 
 #### 4. Install p2os_urdf. On 25JAN2016 p2os_urdf was unavailable thru apt-get.
 1. Locate the file: p2os_urdf.tar.gz in the pioneer3at_navigator src directory.
@@ -44,13 +44,13 @@ Do not install the velodyne driver from the ros repository (DO NOT use the comma
 4. `catkin_make`
 
 #### 6. Make a network connection for the velodyne VLP16.
-1. In the pioneer_navigator root directory the network settings are saved in a file called velodyneVLP16.
+In the pioneer_navigator root directory the network settings are saved in a file called velodyneVLP16.
 
-2. `sudo chown root:root velodyneVLP16`
-3. `sudo chmod 600 velodyneVLP16`
-4. `sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/`
-5. `sudo service network-manager restart`
-6. In the network-manager gui, connect to velodyneVLP16 or velodyne32E.
+1. `sudo chown root:root velodyneVLP16`
+2. `sudo chmod 600 velodyneVLP16`
+3. `sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/`
+4. `sudo service network-manager restart`
+5. In the network-manager gui, connect to velodyneVLP16 or velodyne32E.
 
 #### 7. Install umsa_xsens if using the xsens IMU/GPS. 
 Use the XSens driver from West Point Robitics at https://github.com/westpoint-robotics/usma_xsens.git. This has the support for the newer protocol used.
