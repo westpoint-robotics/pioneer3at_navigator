@@ -51,6 +51,7 @@ In the project root directory the network settings are saved in a file called ve
 5. `sudo cp velodyneVLP16 /etc/NetworkManager/system-connections/`
 6. `sudo cp velodyne32E /etc/NetworkManager/system-connections/`
 7. `sudo service network-manager restart`
+
 In the network-manager gui, connect to velodyneVLP16 or velodyne32E
 
 #### 7. Install umsa_xsens if using the xsens IMU/GPS. 
