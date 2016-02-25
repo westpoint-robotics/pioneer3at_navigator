@@ -42,8 +42,10 @@ Use the instruciont found at https://github.com/westpoint-robotics/usma_velodyne
 Use the instruciont found at https://github.com/westpoint-robotics/usma_xsens.git.
 
 #### 7. Test the install of usma_xsens.
-use: `roslaunch xsens_driver xsens_driver.launch`
+use: 
+`roslaunch xsens_driver xsens_driver.launch`
 
 ## Running the package
-use: `roslaunch pioneer3at_navigator autonomous.launch` 
+use: 
+`roslaunch pioneer3at_navigator autonomous.launch` 
 
