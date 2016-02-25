@@ -46,24 +46,3 @@ Pioneer 3AT Robot Autonomous Navigator
 use:
 `roslaunch pioneer3at_navigator autonomous.launch` 
 
-## Velodyne VLP-16 Laser Ros Driver support:
-Do not install the velodyne driver from the ros repository. The latest master branch on github is required for the VLP-16 support. Clone the repo from https://github.com/westpoint-robotics/pioneer3at_navigator.git to catkin_ws/src. 
-
-## XSens IMU support
-Use the XSens driver from West Point Robitics at https://github.com/westpoint-robotics/usma_xsens.git. This has the support for the newer protocol used.
-
-
-2. `git clone https://github.com/westpoint-robotics/usma_xsens.git`
-3. `sudo apt-get install ros-indigo-gps-common libpcap0.8-dev`
-4. `sudo su`
-5. `echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="2639", ATTRS{manufacturer}=="Xsens", ATTRS{product}=="MTi-G-700 GPS/INS", SYMLINK+="xsens", ACTION=="add", GROUP="dialout", MODE="0660"' >> /etc/udev/rules.d/99-xsens.rules`
-6. `udevadm control --reload-rules`
-7. `exit`
-8. `cd ~/catkin_make`
-9. `catkin_make`
-
-#### 8. Test the install of usma_xsens.
-use: `roslaunch xsens_driver xsens_driver.launch` 
-
-## 9. Running the package
-use: `roslaunch pioneer3at_navigator autonomous.launch` 
