@@ -12,7 +12,7 @@ Example launch file: launches the scan matcher with pre-recorded data
 
   <group if="$(arg use_rviz)">
     <node pkg="rviz" type="rviz" name="rviz" 
-          args="-d $(find pioneer3at_navigator)/launch/include/laser_odom.rviz"/>
+          args="-d $(find pioneer3at_navigator)/launch/includes/laser_odom.rviz"/>
   </group>
 
   #### publish an base_link -> laser transform ###########
@@ -20,34 +20,34 @@ Example launch file: launches the scan matcher with pre-recorded data
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
     args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
 
+    <node pkg="tf" type="static_transform_publisher" name="map_to_world"
+    args="0 0.0 0 0 0 0 world map 100" />
 
     <!-- ========== Start the IMU   ========== -->
- 	<node pkg="xsens_driver" type="mtnode_new.py" name="mtnode_new" output="screen" respawn="true">
-    </node>
-
+    <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>  
 
   #### start the laser scan_matcher ##############################
 
-    <include file="$(find pioneer3at_navigator)/launch/VLP16_with_laserscan.launch">
+    <include file="$(find pioneer3at_navigator)/launch/includes/VLP16_with_laserscan.launch.xml">
     </include>     
 
   <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" 
     name="laser_scan_matcher_node" output="screen">
      <!--      <remap from="/RosAria/pose" to="/odom"/>  -->
-
     <param name="max_iterations" value="10"/>
-
   </node>
 
-  #### start pioneer robot with joystick ##############################
+  #### start pioneer robot with joystick ############################## 
 
      <!-- ========== Integrate Pioneer Robot ========== -->
     <include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
 
     <node pkg="rosaria" type="RosAria" name="RosAria">
         <param name="port" value="/dev/pioneer"/>
-     <!--   <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
-        <remap from="/tf" to="/rosariatf"/>
+<param name="tf_prefix" value="RosAria"/>
+      <!--  <remap from="/RosAria/pose" to="/odom"/>
+        <param name="tf_prefix" value="RosAria"/>
+        <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
     </node>
 
     <!-- ========== Joystick  and Command Velocity Mux ========== -->

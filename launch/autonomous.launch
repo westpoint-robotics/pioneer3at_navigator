@@ -38,18 +38,18 @@
         <remap from="cmd_vel_mux/output" to="/RosAria/cmd_vel"/>
     </node>
 
-    <include file="$(find pioneer3at_navigator)/launch/xbox360_teleop.launch"/>  
+    <include file="$(find pioneer3at_navigator)/launch/includes/xbox360_teleop.launch"/>  
 
     <!-- ========== Start the IMU   ========== -->
     <include file="$(find xsens_driver)/launch/xsens_driver.launch"/> 
 
     <!-- ========== Start the 3d Laser and Laser Scan ========== -->
     
-    <include file="$(find pioneer3at_navigator)/launch/VLP16_with_laserscan.launch">
+    <include file="$(find pioneer3at_navigator)/launch/includes/VLP16_with_laserscan.launch">
     </include>     
 
     <!-- Start ekf to make imu into odom -->
-    <include file="$(find pioneer3at_navigator)/launch/pioneer_ekf.launch">
+    <include file="$(find pioneer3at_navigator)/launch/includes/pioneer_ekf.launch">
     </include> 
 
     <!--  ************** Navigation  ***************  -->

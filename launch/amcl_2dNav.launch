@@ -4,7 +4,7 @@
 <!--   <arg name="initial_pose_y" default="8.07"/>   dml office -->
   <arg name="initial_pose_x" default="0.0"/>   
   <arg name="initial_pose_y" default="0.0"/><!--  -->
-    <arg name="initial_pose_a" default="0.0"/>
+  <arg name="initial_pose_a" default="0.0"/>
 
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
     args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
@@ -36,13 +36,13 @@
         <remap from="cmd_vel_mux/output" to="/RosAria/cmd_vel"/>
     </node>
 
-    <include file="$(find pioneer3at_navigator)/launch/xbox360_teleop.launch"/>  
+    <include file="$(find pioneer3at_navigator)/launch/includes/xbox360_teleop.launch"/>  
 
     <!-- ========== Start the IMU   ========== 
     <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>  -->
 
     <!-- ========== Start the 3d Laser and Laser Scan ========== -->    
-    <include file="$(find pioneer3at_navigator)/launch/VLP16_with_laserscan.launch">
+    <include file="$(find pioneer3at_navigator)/launch/includes/VLP16_with_laserscan.launch">
     </include>
 
     <!--  ************** Navigation  ***************  -->
