@@ -32,7 +32,8 @@ class NavTest():
     def __init__(self):
         # A list of goal coordinates to move to. This assumes (0,0) is the coordinate
         # that the robot started at.
-        deltas = [(0.5,0),(1.0,0),(1.5,0)]
+        #deltas = [(0.5,0),(1.0,0),(1.5,0)]
+        deltas = [(1,0)]
 
         rospy.init_node('nav_test', anonymous=True)        
         rospy.on_shutdown(self.shutdown)        
@@ -60,7 +61,6 @@ class NavTest():
         # Wait 60 seconds for the action server to become available
         self.move_base.wait_for_server(rospy.Duration(60))        
         rospy.loginfo("Connected to move base server")
-
         
         # Make sure we have the initial pose
         rospy.loginfo("Waiting for initial pose")

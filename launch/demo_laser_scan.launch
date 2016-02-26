@@ -35,6 +35,7 @@ Example launch file: launches the scan matcher with pre-recorded data
     name="laser_scan_matcher_node" output="screen">
      <!--      <remap from="/RosAria/pose" to="/odom"/>  -->
     <param name="max_iterations" value="10"/>
+
   </node>
 
   #### start pioneer robot with joystick ############################## 

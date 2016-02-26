@@ -14,7 +14,7 @@
 
     <!-- ========== Load Map Server   ========= -->
     <node pkg="map_server" type="map_server" name="map_server" output="screen"
-    args="$(find pioneer3at_navigator)/maps/maze.yaml">
+    args="$(find pioneer3at_navigator)/maps/ThayerNorthMinus.yaml">
            <param name="frame_id" value="/map"/>
     </node>
 
@@ -23,8 +23,8 @@
 
     <node pkg="rosaria" type="RosAria" name="RosAria">
         <param name="port" value="/dev/pioneer"/>
-      <!--  <remap from="/RosAria/pose" to="/odom"/>
         <param name="tf_prefix" value="RosAria"/>
+      <!--  <remap from="/RosAria/pose" to="/odom"/>
         <remap from="/RosAria/cmd_vel" to="/teleop_velocity_smoother/raw_cmd_vel"/> -->
     </node>
 
@@ -42,8 +42,14 @@
     <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>  -->
 
     <!-- ========== Start the 3d Laser and Laser Scan ========== -->    
-    <include file="$(find pioneer3at_navigator)/launch/includes/VLP16_with_laserscan.launch">
+    <include file="$(find pioneer3at_navigator)/launch/includes/VLP16_with_laserscan.launch.xml">
     </include>
+
+  <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
+     <!--      <remap from="/RosAria/pose" to="/odom"/>  -->
+    <param name="fixed_frame" value="odom"/>
+    <param name="max_iterations" value="10"/>
+  </node>
 
     <!--  ************** Navigation  ***************  -->
     <include file="$(find pioneer3at_navigator)/launch/includes/limited_move_base.launch.xml"/>
