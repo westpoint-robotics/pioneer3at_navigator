@@ -67,8 +67,12 @@
     <!-- Start an rviz node with a custom configuration  -->
     <node pkg="rviz" type="rviz" name="rviz" args="-l $(find pioneer3at_navigator)/rviz.log -d $(find pioneer3at_navigator)/launch/includes/pioneer2.rviz"/>
 
+    
 </launch>
 <!--
+
+
+
 rosbag record -O mylaserdata /scan /tf 
 -->
 

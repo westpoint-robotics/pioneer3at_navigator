@@ -8,6 +8,7 @@ Panels:
         - /TF1/Tree1
         - /xSens_Imu1
         - /xSens_Imu1/Acceleration properties1
+        - /Odometry2
       Splitter Ratio: 0.535714
     Tree Height: 530
   - Class: rviz/Selection
@@ -228,6 +229,16 @@ Visualization Manager:
       Enabled: true
       Name: xSens_Imu
       Topic: /imu/data
+      Value: true
+    - Angle Tolerance: 0.1
+      Class: rviz/Odometry
+      Color: 255; 0; 255
+      Enabled: true
+      Keep: 1000
+      Length: 0.35
+      Name: Odometry
+      Position Tolerance: 0.1
+      Topic: /odomIMu
       Value: true
   Enabled: true
   Global Options:

@@ -42,7 +42,7 @@
 
 <!-- This line runs all the bag files specified above -->
     <node pkg="rosbag" type="play" name="player" output="screen" 
-    args=" -r 1.0 --clock $(arg imu) $(arg p3atpose) $(arg 2dscan)"/>
+    args=" -r 0.5 --clock $(arg imu) $(arg p3atpose) $(arg 2dscan)"/>
 
      <!-- ========== Integrate Pioneer Robot ========== -->
     <include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
@@ -71,6 +71,8 @@
 
     <!-- Start an rviz node with a custom configuration  -->
     <node pkg="rviz" type="rviz" name="rviz" args="-l $(find pioneer3at_navigator)/rviz.log -d $(find pioneer3at_navigator)/launch/includes/nomap_2dnav.rviz"/>
+
+    <node pkg="pioneer3at_navigator" type="combineOdomImu.py" name="CombineOdomImu"/>
 
 </launch>
 <!--
