@@ -6,14 +6,15 @@
   
   <arg name="odom_frame_id"   default="odom"/>
   <arg name="base_frame_id"   default="base_link"/> 
-  <arg name="global_frame_id" default="map"/>
+  <arg name="global_frame_id" default="odom"/>
   <arg name="odom_topic" default="odom"/>
+  <arg name="laser_topic" default="scan" />
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find pioneer3at_navigator)/param/costmap_common_params_pioneer.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find pioneer3at_navigator)/param/costmap_common_params_pioneer.yaml" command="load" ns="local_costmap" /> 
     <rosparam file="$(find pioneer3at_navigator)/param/local_costmap_params_pioneer.yaml" command="load" />  
-    <rosparam file="$(find pioneer3at_navigator)/param/global_costmap_params_pioneer.yaml" command="load" />
+    <rosparam file="$(find pioneer3at_navigator)/param/nomap_global_costmap_params.yaml" command="load" />
     <rosparam file="$(find pioneer3at_navigator)/param/base_local_planner_params.yaml" command="load" />
 
     <!-- reset frame_id parameters using user input data -->
@@ -22,10 +23,10 @@
     <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
     <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
     <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
-    <param name="recovery_behavior_enabled" value="false"/>
 
     <remap from="cmd_vel" to="navigation_velocity_smoother/raw_cmd_vel"/>
     <remap from="odom" to="$(arg odom_topic)"/>
+    <remap from="scan" to="$(arg laser_topic)"/>
   </node>
 
 </launch>
