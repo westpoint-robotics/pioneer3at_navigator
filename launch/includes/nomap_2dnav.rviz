@@ -7,8 +7,6 @@ Panels:
         - /TF1/Frames1
         - /TF1/Tree1
         - /xSens_Imu1
-        - /xSens_Imu1/Acceleration properties1
-        - /Odometry2
       Splitter Ratio: 0.535714
     Tree Height: 530
   - Class: rviz/Selection
@@ -28,7 +26,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: LaserScan
+    SyncSource: ""
 Visualization Manager:
   Class: ""
   Displays:
@@ -172,7 +170,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: AxisColor
       Decay Time: 10000
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 0; 0
       Max Intensity: 4096
@@ -188,6 +186,27 @@ Visualization Manager:
       Topic: /scan
       Use Fixed Frame: true
       Use rainbow: true
+      Value: false
+    - Acceleration properties:
+        Acc. vector alpha: 1
+        Acc. vector color: 255; 0; 0
+        Acc. vector scale: 0.5
+        Derotate acceleration: false
+        Enable acceleration: true
+      Axes properties:
+        Axes scale: 3
+        Enable axes: true
+      Box properties:
+        Box alpha: 1
+        Box color: 255; 0; 0
+        Enable box: false
+        x_scale: 1
+        y_scale: 1
+        z_scale: 1
+      Class: rviz_imu_plugin/Imu
+      Enabled: true
+      Name: xSens_Imu
+      Topic: /imu/data
       Value: true
     - Angle Tolerance: 0.1
       Class: rviz/Odometry
@@ -205,30 +224,9 @@ Visualization Manager:
       Enabled: true
       Keep: 1000
       Length: 0.4
-      Name: Odometry
+      Name: EKF_Odometry
       Position Tolerance: 0.1
       Topic: /odometry/filtered
-      Value: true
-    - Acceleration properties:
-        Acc. vector alpha: 1
-        Acc. vector color: 255; 0; 0
-        Acc. vector scale: 0.02
-        Derotate acceleration: false
-        Enable acceleration: true
-      Axes properties:
-        Axes scale: 1
-        Enable axes: true
-      Box properties:
-        Box alpha: 1
-        Box color: 255; 0; 0
-        Enable box: false
-        x_scale: 1
-        y_scale: 1
-        z_scale: 1
-      Class: rviz_imu_plugin/Imu
-      Enabled: true
-      Name: xSens_Imu
-      Topic: /imu/data
       Value: true
     - Angle Tolerance: 0.1
       Class: rviz/Odometry
@@ -236,7 +234,7 @@ Visualization Manager:
       Enabled: true
       Keep: 1000
       Length: 0.35
-      Name: Odometry
+      Name: Odom_on_Imu
       Position Tolerance: 0.1
       Topic: /odomIMu
       Value: true
@@ -259,7 +257,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -1.58
+      Angle: -1.645
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
@@ -268,11 +266,11 @@ Visualization Manager:
         Value: false
       Name: Current View
       Near Clip Distance: 0.01
-      Scale: 19.0227
+      Scale: 26.9695
       Target Frame: odom
       Value: TopDownOrtho (rviz)
-      X: 4.3704
-      Y: -25.9583
+      X: 1.23879
+      Y: -18.4721
     Saved: ~
 Window Geometry:
   Displays:
@@ -290,5 +288,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1382
-  X: 31
-  Y: 227
+  X: 48
+  Y: 213

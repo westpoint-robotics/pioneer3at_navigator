@@ -7,6 +7,8 @@
 
 <launch>
 
+    <param name="use_sim_time" value="false"/>
+
    <node pkg="tf" type="static_transform_publisher" name="map_ra_odom"
     args="0 0 0 0 0 0 map RosAria/odom 100" />
 
@@ -14,9 +16,12 @@
     args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
 
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
-    args="0 0 0 0 0 0 top_plate imu 100" />
+    args="0 0 0 0 0 0 RosAria/base_link imu 100" />
 
-    <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+    <node pkg="tf" type="static_transform_publisher" name="top_plate_to_MTIimu"
+    args="0 0 0 0 0 0 RosAria/base_link mti/data 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="map_to_odom" respawn="true"
     args="0 0 0 0 0 0 map odom 100" />
 <!--  
  <node pkg="tf" type="static_transform_publisher" name="odom_imu"
@@ -45,8 +50,11 @@
 
     <include file="$(find pioneer3at_navigator)/launch/includes/xbox360_teleop.launch"/>  
 
-    <!-- ========== Start the IMU   ========== -->
-    <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>  
+    <!-- ========== Start the IMU   ========== 
+    <include file="$(find xsens_driver)/launch/xsens_driver.launch"/>   
+rosrun xsens_driver mtnode.py _device:=/dev/xsens _baudrate:=115200
+-->
+    <node pkg="xsens_driver" name="mtnode" type="mtnode.py" args="_device:=/dev/xsens _baudrate:=115200"/>
 
     <!-- ========== Start the 3d Laser and Laser Scan ========== -->    
     <include file="$(find pioneer3at_navigator)/launch/includes/VLP16_with_laserscan.launch.xml">

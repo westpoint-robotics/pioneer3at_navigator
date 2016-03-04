@@ -1,57 +1,48 @@
-<!-- Pioneer in USMA rviz catkin_ws/src/pioneerauto/launch/pioneer.rviz 
-
-    <node pkg="tf" type="static_transform_publisher" name="base_link_to_imu"
-    args="0 0 0 0 0 0 base_link imu 100" /> 
-
-   <node pkg="tf" type="static_transform_publisher" name="ra_odomos_aria_base_to_base"
-    args="0 0 0 0 0 0 RosAria/odom base_link 100" />
-    -->
+<!-- Pioneer in USMA rviz catkin_ws/src/pioneerauto/launch/pioneer.rviz   -->
 
 <launch>
+
+    <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
+        args="0 0 0 0 0 0 map /imu 100" /> 
+
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_velodyne"
-    args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
+        args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
 
-   <node pkg="tf" type="static_transform_publisher" name="map_to_ra_odom"
-    args="0 0 0 0 0 0 map RosAria/odom 100" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_raOdom"
+        args="10 0 0 0 0 0 map RosAria/odom 100" />
 
-   <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
-    args="0 0 0 0 0 0 odom imu 100" />
+    <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+        args="0 0 0 0 0 0 map ekf/odom 100" />
 
-    <node pkg="tf" type="static_transform_publisher" name="ra_odom_to_odom"
-    args="0 0 0 0 0 0 top_plate odom 100" />
-<!--  
- <node pkg="tf" type="static_transform_publisher" name="odom_imu"
-    args="0 0 0 0 0 0 RosAria/odom imu_frame 100" />
+    <node pkg="tf" type="static_transform_publisher" name="ekfBase_base"
+        args="0 0 0 0 0 0 ekf/base_link base_link 100" />
 
-    <node pkg="tf" type="static_transform_publisher" name="imu_to_base"
-    args="0 0 0 0 0 0 odom base_link 100" />
-  =============   bagfiles  =======================-->
-<param name="use_sim_time" value="true"/>
+<!--  =============   bagfiles  =======================-->
+    <param name="use_sim_time" value="true"/>
 
-<!--This line sets the path to the ROS bagfiles to run -->
-<arg name="path" default="$(env HOME)/catkin_ws/rosbags/pioneer01/"/>
+    <!--This line sets the path to the ROS bagfiles to run -->
+    <arg name="path" default="$(env HOME)/catkin_ws/rosbags/pioneer23_Circ/"/>
 
-<!--These are the bag files to run 
-<arg name="enc_raw" default="$(arg path)enc_raw.bag" /> -->
-<arg name="odom" default="$(arg path)pose2D.bag" />
-<arg name="imu" default="$(arg path)imu_data.bag" />
-<arg name="cmd_vel" default="$(arg path)RosAria_cmd_vel.bag" />
-<arg name="p3atpose" default="$(arg path)RosAria_pose.bag" />
-<arg name="2dscan" default="$(arg path)scan.bag" />
-<!--<arg name="other" default="$(arg path)other.bag" /> -->
+    <!--These are the bag files to run -->
+    <arg name="imu" default="$(arg path)imu_data.bag" />
+    <arg name="cmd_vel" default="$(arg path)RosAria_cmd_vel.bag" />
+    <arg name="p3atpose" default="$(arg path)RosAria_pose.bag" />
+    <arg name="2dscan" default="$(arg path)scan.bag" />
+    <!--<arg name="odom" default="$(arg path)pose2D.bag" />
+    <arg name="other" default="$(arg path)other.bag" /> -->
 
-<!-- This line runs all the bag files specified above -->
+    <!-- This line runs all the bag files specified above -->
     <node pkg="rosbag" type="play" name="player" output="screen" 
-    args=" -r 0.5 --clock $(arg imu) $(arg p3atpose) $(arg 2dscan)"/>
+    args=" -r 1.0 --clock $(arg imu) $(arg p3atpose) $(arg 2dscan)"/>
 
-     <!-- ========== Integrate Pioneer Robot ========== -->
+<!-- ========== Integrate Pioneer Robot ========== -->
     <include file="$(find p2os_urdf)/launch/pioneer3at_urdf.launch"/>
 
-    <!-- Start ekf to make imu into odom -->
+    <!-- Start ekf to make imu into odom   -->
     <include file="$(find pioneer3at_navigator)/launch/includes/2dnav_ekf.launch">
     </include>      
 
-    <!-- ========== Start Laser Scan Matcher ==========     
+<!-- ========== Start Laser Scan Matcher ==========     
     <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
         <param name="fixed_frame" value="odom"/>
         <param name="base_frame" value="base_link"/>
@@ -69,13 +60,71 @@
     <!--  ************** Navigation  ***************  -->
     <include file="$(find pioneer3at_navigator)/launch/includes/nomap_move_base.launch.xml"/>
 
-    <!-- Start an rviz node with a custom configuration  -->
+    <!-- Start an rviz node with a custom configuration
+    <node pkg="pioneer3at_navigator" type="combineOdomImu.py" name="CombineOdomImu"/>
+  -->
     <node pkg="rviz" type="rviz" name="rviz" args="-l $(find pioneer3at_navigator)/rviz.log -d $(find pioneer3at_navigator)/launch/includes/nomap_2dnav.rviz"/>
 
-    <node pkg="pioneer3at_navigator" type="combineOdomImu.py" name="CombineOdomImu"/>
 
 </launch>
 <!--
 rosbag record -O mylaserdata /scan /tf 
--->
 
+header: 
+  seq: 8415
+  stamp: 
+    secs: 1456873898
+    nsecs: 139863014
+  frame_id: /imu
+orientation: 
+  x: 0.00516315596178
+  y: 0.00393335428089
+  z: -0.808059513569
+  w: 0.589064896107
+orientation_covariance: [0.017453292519943295, 0.0, 0.0, 0.0, 0.017453292519943295, 0.0, 0.0, 0.0, 0.15707963267948966]
+angular_velocity: 
+  x: 0.0289170071483
+  y: -0.0061934045516
+  z: -0.0166649855673
+angular_velocity_covariance: [0.0004363323129985824, 0.0, 0.0, 0.0, 0.0004363323129985824, 0.0, 0.0, 0.0, 0.0004363323129985824]
+linear_acceleration: 
+  x: -0.000824625836685
+  y: -0.000883677625097
+  z: 0.0953821316361
+linear_acceleration_covariance: [0.0004, 0.0, 0.0, 0.0, 0.0004, 0.0, 0.0, 0.0, 0.0004]
+
+
+header: 
+  seq: 2017
+  stamp: 
+    secs: 1456874005
+    nsecs: 58258517
+  frame_id: RosAria/odom
+child_frame_id: RosAria/base_link
+pose: 
+  pose: 
+    position: 
+      x: -6.889
+      y: -23.521
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: 0.681978921641
+      w: 0.731371827757
+  covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+twist: 
+  twist: 
+    linear: 
+      x: 0.663
+      y: 0.0
+      z: 0.0
+    angular: 
+      x: 0.0
+      y: 0.0
+      z: 0.0
+  covariance: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+0.00787859316915
+
+-->

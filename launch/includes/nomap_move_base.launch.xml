@@ -4,10 +4,10 @@
 <launch>
   <include file="$(find pioneer3at_navigator)/launch/includes/velocity_smoother.launch.xml"/> 
   
-  <arg name="odom_frame_id"   default="odom"/>
+  <arg name="odom_frame_id"   default="ekf/odom"/>
   <arg name="base_frame_id"   default="base_link"/> 
-  <arg name="global_frame_id" default="odom"/>
-  <arg name="odom_topic" default="odom"/>
+  <arg name="global_frame_id" default="ekf/odom"/>
+  <arg name="odom_topic" default="ekf/odom"/>
   <arg name="laser_topic" default="scan" />
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">

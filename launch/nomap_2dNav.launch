@@ -4,7 +4,7 @@
     args="0.17 0.0 0.18 0 0 0 top_plate velodyne 100" />
 
     <node pkg="tf" type="static_transform_publisher" name="top_plate_to_imu"
-    args="0 0 0 0 0 0 top_plate imu 100" />
+    args="0 0 0 0 0 0 map imu 100" />
 
     <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
     args="0 0 0 0 0 0 map odom 100" />
